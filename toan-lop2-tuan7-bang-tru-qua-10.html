@@ -73,6 +73,7 @@ select{font:inherit;font-weight:700;border:2.5px dashed #C9B8E8;border-radius:12
 .solrow .num{width:58px}
 .opt{opacity:.55}
 .steps{background:#F3FAFF;border-radius:16px;padding:8px 14px;font-size:17px;font-weight:600}.steps ol{margin:4px 0 0;padding-left:22px}
+.grp{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
 .hintline{font-size:15px;color:var(--muted);margin:2px 0 0}
 
 .tools{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
@@ -272,7 +273,7 @@ document.getElementById('resArt').innerHTML=ART.res();
 
 /* ================= ĐỀ BÀI ================= */
 const N=(id,w)=>`<input class="num" id="${id}" inputmode="numeric" autocomplete="off" maxlength="3"${w?` style="width:${w}px"`:''}>`;
-const UNITS=['viên bi','quả cam','quyển truyện','ngôi sao','bạn','chiếc mũ'];
+const UNITS=['viên bi','quả cam','quyển truyện','ngôi sao giấy','ngôi sao','bạn','chiếc mũ'];
 const unitSel=id=>`<select id="${id}"><option value="">đơn vị…</option>${UNITS.map(u=>`<option>${u}</option>`).join('')}</select>`;
 const opSel=(id,opt)=>`<select id="${id}" class="op${opt?' opt':''}"><option value="">${opt?'…':'?'}</option><option value="-">−</option><option value="+">+</option></select>`;
 
@@ -286,7 +287,7 @@ const WP={
  q5:{given:[18,5,6],answer:7,unit:'quyển truyện',kw:['truyen','quyen','sach'],sample:'Thư viện còn lại số quyển truyện là:',lines:2,
    sum:[['Có:',18,'quyển truyện'],['Sáng cho mượn:',5,'quyển'],['Chiều cho mượn:',6,'quyển']],ask:'Còn lại: … quyển truyện?',
    plusMsg:'Cho mượn đi → số truyện ít đi. Em phải trừ <b>cả</b> 5 quyển buổi sáng <b>và</b> 6 quyển buổi chiều.'},
- q6:{given:[17,9],answer:8,unit:'ngôi sao',kw:['sao','ha'],sample:'Hà gấp được số ngôi sao giấy là:',
+ q6:{given:[17,9],answer:8,unit:'ngôi sao giấy',units:['ngôi sao giấy','ngôi sao'],kw:['sao','ha'],sample:'Hà gấp được số ngôi sao giấy là:',
    sum:[['Cả hai bạn:',17,'ngôi sao'],['Linh:',9,'ngôi sao']],ask:'Hà: … ngôi sao?',
    plusMsg:'17 là số sao của <b>cả hai bạn</b>. Muốn tìm số sao của Hà, em lấy tổng <b>trừ</b> số sao của Linh.'},
  q9:{given:[16,9],answer:7,unit:'bạn',kw:['ban','mu'],sample:'Số bạn chưa nhận được mũ là:',
@@ -297,7 +298,8 @@ function wpHTML(id){const P=WP[id];
   const sum=P.sum.map((r,i)=>`<div class="sumrow">${r[0]} ${N(id+'_s'+i)} ${r[2]}</div>`).join('')+`<div class="sumrow">${P.ask}</div>`;
   let lines='';const L=P.lines||1;
   for(let i=0;i<L;i++){
-    lines+=`<div class="solrow">${N(id+'_a'+i)} ${opSel(id+'_o'+i)} ${N(id+'_b'+i)} ${opSel(id+'_p'+i,true)} ${N(id+'_c'+i)} = ${N(id+'_r'+i)} ( ${unitSel(id+'_u'+i)} )</div>`;
+    const third=(P.given.length>2&&i===0)?`<span class="grp">${opSel(id+'_p'+i,true)} ${N(id+'_c'+i)}</span>`:'';
+    lines+=`<div class="solrow"><span class="grp">${N(id+'_a'+i)} ${opSel(id+'_o'+i)} ${N(id+'_b'+i)}</span> ${third} <span class="grp">= ${N(id+'_r'+i)}</span> <span class="grp">( ${unitSel(id+'_u'+i)} )</span></div>`;
     if(L>1&&i===0) lines+=`<p class="hintline">Nếu em giải bằng 2 phép tính thì viết thêm câu và phép tính thứ hai ở dưới; nếu làm 1 phép tính thì bỏ trống dòng dưới.</p><input class="txt" id="${id}_t1" placeholder="(Câu lời giải thứ hai – nếu có)">`;
   }
   return `<div class="solve">
@@ -306,7 +308,7 @@ function wpHTML(id){const P=WP[id];
       <input class="txt" id="${id}_t0" placeholder="Câu lời giải… (VD: ${P.sample.split(' / ')[0]})">
       ${lines}
       <div class="solrow">Đáp số: ${N(id+'_d')} ${unitSel(id+'_du')}</div>
-      <p class="hintline">Ô dấu thứ hai (…) chỉ dùng khi phép tính có 3 số.</p>
+      ${P.given.length>2?'<p class="hintline">Ô dấu thứ hai (…) chỉ dùng khi phép tính có 3 số.</p>':''}
     </div></div>`;
 }
 
@@ -392,16 +394,17 @@ function gradeQ7(){
   return{ok:0,tot:1,notes:['16 − 9 = 7; 13 − 5 = 8; <b>17 − 8 = 9</b>; 15 − 8 = 7. Số 9 lớn nhất → chọn <b>C</b>.']};
 }
 function evalLine(id,i){
-  const a=n(id+'_a'+i),o=v(id+'_o'+i),b=n(id+'_b'+i),p=v(id+'_p'+i),c=n(id+'_c'+i),r=n(id+'_r'+i);
+  let a=n(id+'_a'+i),o=v(id+'_o'+i),b=n(id+'_b'+i),p=v(id+'_p'+i),c=n(id+'_c'+i),r=n(id+'_r'+i);
+  let moved=false;if(!p&&c!==null&&(r===null||r===c)){moved=r===null;r=c;c=null}
   const empty=a===null&&b===null&&r===null&&c===null&&!o;
   if(empty)return{empty:true};
   if(a===null||b===null||r===null||!o)return{bad:true,a,b,c,r,o,p};
   let val=o==='-'?a-b:a+b;let nums=[a,b];
   if(p||c!==null){if(!p||c===null)return{bad:true,a,b,c,r,o,p};val=p==='-'?val-c:val+c;nums.push(c)}
-  return{a,b,c,r,o,p,nums,val,arith:val===r,usesPlus:o==='+'||p==='+'};
+  return{a,b,c,r,o,p,nums,val,moved,arith:val===r,usesPlus:o==='+'||p==='+'};
 }
 function gradeWP(id){
-  const P=WP[id];let ok=0,tot=0,notes=[];
+  const P=WP[id];const uok=x=>(P.units||[P.unit]).includes(x);let ok=0,tot=0,notes=[];
   // tóm tắt
   P.sum.forEach((r,i)=>{tot+=.5;const g=n(id+'_s'+i)===r[1];mark($(id+'_s'+i),g);if(g)ok+=.5});
   if(P.sum.some((r,i)=>n(id+'_s'+i)!==r[1]))notes.push('Tóm tắt: '+P.sum.map(r=>`${r[0]} <b>${r[1]}</b> ${r[2]}`).join('; ')+'; '+P.ask);
@@ -416,9 +419,9 @@ function gradeWP(id){
   if(!filled.length){why='Em chưa viết phép tính.'}
   else if(filled.some(l=>l.bad)){why='Phép tính còn thiếu số hoặc thiếu dấu.'}
   else{
-    const avail=[...P.given];let pool=[...P.given];let good=true;
+    let pool=[...P.given];let good=true;
     filled.forEach((l,k)=>{l.nums.forEach(x=>{const ix=pool.indexOf(x);if(ix>=0)pool.splice(ix,1);else{const prev=filled.slice(0,k).map(f=>f.r);if(!prev.includes(x))good=false}});pool.push(l.r)});
-    const usedAll=P.given.every(g=>filled.some(l=>l.nums.includes(g))||filled.some(l=>l.r===g&&false));
+    const usedAll=P.given.every(g=>filled.some(l=>l.nums.includes(g)));
     const last=filled[filled.length-1];
     if(filled.some(l=>!l.arith)){why='Kết quả phép tính chưa đúng – em tính lại nhé.'}
     else if(last.r!==P.answer){why=filled.some(l=>l.usesPlus)?P.plusMsg:(id==='q5'?'Em mới trừ một lần cho mượn. '+P.plusMsg:'Em chọn chưa đúng số để tính.')}
@@ -427,15 +430,15 @@ function gradeWP(id){
   }
   // unit of last filled line
   const lastIdx=filled.length?lines.indexOf(filled[filled.length-1]):0;
-  filled.forEach((l,k)=>{const i=lines.indexOf(l);['_a','_b','_r'].forEach(s=>mark($(id+s+i),calcOk));mark($(id+'_o'+i),calcOk);if(l.p||l.c!==null){mark($(id+'_p'+i),calcOk);mark($(id+'_c'+i),calcOk)}});
+  filled.forEach((l,k)=>{const i=lines.indexOf(l);['_a','_b'].forEach(s=>mark($(id+s+i),calcOk));mark($(id+(l.moved?'_c':'_r')+i),calcOk);mark($(id+'_o'+i),calcOk);if(l.p||l.c!==null){mark($(id+'_p'+i),calcOk);mark($(id+'_c'+i),calcOk)}});
   if(!filled.length){['_a','_b','_r'].forEach(s=>mark($(id+s+'0'),false));mark($(id+'_o0'),false)}
   if(calcOk)ok+=2;else notes.push('Phép tính: '+why+' Đúng là: <b>'+(id==='q5'?'18 − 5 − 6 = 7 (quyển truyện)':`${P.given[0]} − ${P.given[1]} = ${P.answer} (${P.unit})`)+'</b>.');
   // đơn vị
-  tot+=.5;const uId=id+'_u'+lastIdx;const uOk=v(uId)===P.unit;mark($(uId),uOk);if(uOk)ok+=.5;else notes.push(`Đơn vị đúng là <b>(${P.unit})</b>.`);
-  if(id==='q5'&&filled.length>1){const u0=id+'_u0';const g=v(u0)===P.unit;mark($(u0),g)}
+  tot+=.5;const uId=id+'_u'+lastIdx;const uOk=uok(v(uId));mark($(uId),uOk);if(uOk)ok+=.5;else notes.push(`Đơn vị đúng là <b>(${P.unit})</b>.`);
+  if(id==='q5'&&filled.length>1){const u0=id+'_u0';const g=uok(v(u0));mark($(u0),g)}
   // đáp số
-  tot+=1;const dOk=n(id+'_d')===P.answer&&v(id+'_du')===P.unit;mark($(id+'_d'),n(id+'_d')===P.answer);mark($(id+'_du'),v(id+'_du')===P.unit);
-  if(dOk)ok+=1;else notes.push(`Đáp số: <b>${P.answer} ${P.unit}</b>.`);
+  tot+=1;const dn=n(id+'_d')===P.answer,du=uok(v(id+'_du'));mark($(id+'_d'),dn);mark($(id+'_du'),du);
+  if(dn)ok+=.5;if(du)ok+=.5;if(!(dn&&du))notes.push(`Đáp số: <b>${P.answer} ${P.unit}</b>.`);
   return{ok,tot,notes};
 }
 const praise=['Giỏi quá!','Chính xác!','Tuyệt vời!','Xuất sắc!','Em làm rất chắc!'];
@@ -449,7 +452,7 @@ function grade(){
     else if(q.id==='q3')r=gradeQ3();
     else if(q.id==='q7')r=gradeQ7();
     else r=gradeWP(q.id);
-    const pts=Math.round(q.pts*r.ok/r.tot*4)/4;total+=pts;
+    let pts=Math.round(q.pts*r.ok/r.tot*4)/4;if(r.ok<r.tot)pts=Math.min(pts,q.pts-.25);if(r.ok>0&&pts<=0)pts=.25;if(r.ok<=0)pts=0;total+=pts;
     card.classList.remove('ok','part','bad');
     const cls=r.ok>=r.tot?'ok':(r.ok>0?'part':'bad');card.classList.add(cls);
     $('badge_'+q.id).textContent=(cls==='ok'?'⭐ ':'')+fmt(pts)+' / '+fmt(q.pts)+' điểm';
