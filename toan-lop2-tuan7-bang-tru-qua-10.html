@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toán lớp 2 – Tuần 7 – Bảng trừ (qua 10)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFF7EC; --paper:#FFFFFF; --ink:#2E2A4F; --muted:#6B6890;
+  --blue:#4FA3F7; --pink:#FF7EB3; --yellow:#FFC93C; --green:#2FBF71; --red:#F25C54;
+  --orange:#FF9F1C; --purple:#8C6BF2; --line:#EADFCB; --soft:#FFF1D9;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Baloo 2",system-ui,sans-serif;font-size:19px;line-height:1.45;
+  background-image:radial-gradient(#F5E6CC 1.5px,transparent 1.5px);background-size:22px 22px}
+.wrap{max-width:860px;margin:0 auto;padding:16px 16px 80px}
+header.hero{background:linear-gradient(135deg,#FFE29A,#FFB7D0);border-radius:28px;padding:18px 20px;display:flex;gap:14px;align-items:center;box-shadow:0 6px 0 #E9B98A}
+.hero svg{flex:0 0 auto;width:170px;height:auto}
+.hero .tt small{display:inline-block;background:#fff;border-radius:999px;padding:2px 12px;font-weight:700;color:var(--purple);font-size:15px}
+.hero h1{margin:6px 0 2px;font-size:30px;line-height:1.15}
+.hero p{margin:0;color:#5a4a6a;font-weight:600}
+.info{margin:16px 0;background:var(--paper);border-radius:22px;padding:14px 18px;display:grid;grid-template-columns:2fr 1fr;gap:12px;box-shadow:0 4px 0 var(--line)}
+.info label{font-weight:700;font-size:16px;color:var(--muted);display:block}
+.info input{width:100%;font:inherit;border:2.5px solid var(--line);border-radius:14px;padding:6px 12px;outline:none}
+.info input:focus{border-color:var(--blue)}
+.card{background:var(--paper);border-radius:26px;padding:18px 20px 16px;margin:18px 0;box-shadow:0 5px 0 var(--line);position:relative;border:3px solid transparent;transition:border-color .3s}
+.card.ok{border-color:#9BE3BC}.card.part{border-color:#FFD98A}.card.bad{border-color:#FFB3AE}
+.qhead{display:flex;gap:14px;align-items:flex-start}
+.qnum{flex:0 0 auto;background:var(--purple);color:#fff;font-weight:800;border-radius:16px;padding:2px 14px;font-size:18px;box-shadow:0 3px 0 #6A4FD0}
+.qtext{font-weight:600;margin-top:1px}
+.qbody{display:flex;gap:16px;align-items:flex-start;margin-top:10px}
+.qmain{flex:1;min-width:0}
+.art{flex:0 0 200px;width:200px}
+.art svg{width:100%;height:auto;display:block}
+.badge{position:absolute;top:-14px;right:16px;background:#fff;border-radius:999px;padding:2px 14px;font-weight:800;font-size:16px;box-shadow:0 3px 0 var(--line);display:none}
+.card.ok .badge,.card.part .badge,.card.bad .badge{display:block}
+.card.ok .badge{color:var(--green)}.card.part .badge{color:#D58B00}.card.bad .badge{color:var(--red)}
+
+/* inputs */
+.num{width:62px;font:inherit;font-weight:800;text-align:center;border:2.5px dashed #C9B8E8;border-radius:12px;padding:2px 4px;background:#FBF8FF;color:var(--ink);outline:none}
+.num:focus{border-style:solid;border-color:var(--blue);background:#fff}
+.num.ok,select.ok,.txt.ok{border:2.5px solid var(--green);background:#E9FBF1}
+.num.bad,select.bad,.txt.bad{border:2.5px solid var(--red);background:#FFF0EE}
+select{font:inherit;font-weight:700;border:2.5px dashed #C9B8E8;border-radius:12px;padding:2px 6px;background:#FBF8FF;color:var(--ink)}
+.calc{display:flex;flex-wrap:wrap;gap:10px 22px;margin:6px 0}
+.calc .it{font-size:24px;font-weight:700;white-space:nowrap}
+.calc .lb{color:var(--purple);font-weight:800;margin-right:4px}
+.choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:6px}
+.choice{border:2.5px solid var(--line);border-radius:16px;padding:8px 12px;font-size:22px;font-weight:700;cursor:pointer;background:#fff;text-align:left;font-family:inherit;color:var(--ink)}
+.choice b{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--soft);margin-right:8px;font-size:18px}
+.choice.sel{border-color:var(--blue);background:#EEF6FF}.choice.sel b{background:var(--blue);color:#fff}
+.choice.ok{border-color:var(--green);background:#E9FBF1}.choice.ok b{background:var(--green);color:#fff}
+.choice.bad{border-color:var(--red);background:#FFF0EE}.choice.bad b{background:var(--red);color:#fff}
+.cmp{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.cmp .row{font-size:23px;font-weight:700;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.signs{display:inline-flex;gap:6px}
+.sign{width:46px;height:46px;border-radius:14px;border:2.5px solid var(--line);background:#fff;font:inherit;font-size:26px;font-weight:800;cursor:pointer;color:var(--ink)}
+.sign.sel{border-color:var(--blue);background:var(--blue);color:#fff}
+.sign.ok{border-color:var(--green);background:var(--green);color:#fff}
+.sign.bad{border-color:var(--red);background:var(--red);color:#fff}
+
+/* word problems */
+.solve{display:grid;grid-template-columns:minmax(0,0.8fr) minmax(0,1.4fr);gap:14px;margin-top:12px}
+.box{background:#FFFBF3;border:2px solid var(--line);border-radius:18px;padding:10px 14px}
+.box h4{margin:0 0 6px;font-size:17px;color:var(--orange);text-transform:uppercase;letter-spacing:.5px}
+.sumrow{margin:4px 0;font-weight:600}
+.solrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:6px 0;font-weight:700}
+.txt{width:100%;font:inherit;font-weight:600;border:2.5px dashed #C9B8E8;border-radius:12px;padding:4px 10px;background:#FBF8FF;outline:none;color:var(--ink)}
+.txt:focus{border-style:solid;border-color:var(--blue);background:#fff}
+.op{width:56px;text-align:center}
+.solrow .num{width:58px}
+.opt{opacity:.55}
+.steps{background:#F3FAFF;border-radius:16px;padding:8px 14px;font-size:17px;font-weight:600}.steps ol{margin:4px 0 0;padding-left:22px}
+.hintline{font-size:15px;color:var(--muted);margin:2px 0 0}
+
+.tools{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.hbtn{border:none;background:var(--soft);color:#9A6A00;font:inherit;font-weight:700;font-size:16px;border-radius:999px;padding:4px 14px;cursor:pointer}
+.hint,.fb{display:none;margin-top:10px;border-radius:16px;padding:10px 14px;font-size:17px;font-weight:600}
+.hint{background:#FFF6D6;border-left:6px solid var(--yellow)}
+.hint.show,.fb.show{display:block}
+.fb{background:#F3F0FF;border-left:6px solid var(--purple)}
+.fb .g{color:var(--green);font-weight:800}.fb .r{color:var(--red);font-weight:800}
+.fb ul{margin:4px 0 0;padding-left:20px}
+
+.actions{position:sticky;bottom:12px;display:flex;justify-content:center;gap:12px;margin-top:20px;z-index:5}
+.big{border:none;font:inherit;font-weight:800;font-size:21px;border-radius:999px;padding:10px 26px;cursor:pointer;color:#fff;box-shadow:0 5px 0 rgba(0,0,0,.18)}
+.big:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.18)}
+.go{background:var(--green)}.fix{background:var(--orange)}.reset{background:#9C98B8}
+.hidden{display:none!important}
+
+.result{background:linear-gradient(135deg,#C9F2FF,#E6D9FF);border-radius:28px;padding:18px 20px;margin-top:20px;display:flex;gap:16px;align-items:center;box-shadow:0 6px 0 #B9A9E6}
+.result svg{flex:0 0 150px;width:150px}
+.score{font-size:54px;font-weight:800;line-height:1;color:var(--purple)}
+.score small{font-size:24px;color:var(--muted)}
+.stars{font-size:30px;letter-spacing:4px}
+.result p{margin:6px 0;font-weight:600}
+.copy{background:var(--blue)}
+.foot{text-align:center;color:var(--muted);font-weight:600;margin-top:22px}
+canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:50}
+.toast{position:fixed;left:50%;top:18px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:8px 18px;border-radius:999px;font-weight:700;z-index:60;opacity:0;transition:opacity .3s}
+.toast.show{opacity:1}
+
+@media (max-width:640px){
+  body{font-size:18px}
+  header.hero{flex-direction:column;text-align:center}
+  .hero svg{width:150px}
+  .hero h1{font-size:25px}
+  .info{grid-template-columns:1fr}
+  .qbody{flex-direction:column-reverse;align-items:center}
+  .qmain{width:100%}
+  .art{width:170px;flex-basis:auto}
+  .solve{grid-template-columns:1fr}
+  .choices{grid-template-columns:1fr}
+  .result{flex-direction:column;text-align:center}
+  .big{font-size:18px;padding:9px 18px}
+}
+</style>
+</head>
+<body>
+<canvas id="fx"></canvas>
+<div class="toast" id="toast"></div>
+<div class="wrap">
+
+<header class="hero">
+  <svg id="heroArt" viewBox="0 0 220 170" aria-hidden="true"></svg>
+  <div class="tt">
+    <small>TOÁN BỒI DƯỠNG LỚP 2 · TUẦN 7</small>
+    <h1>Tuần 7 – Phiếu luyện tập số 2<br>Bảng trừ (qua 10)</h1>
+    <p>Làm từng câu, bấm <b>Nộp bài</b> để cô chấm ngay nhé! ✏️</p>
+  </div>
+</header>
+
+<section class="info">
+  <div><label for="hoten">Họ và tên</label><input id="hoten" placeholder="Em gõ tên của mình…"></div>
+  <div><label for="lop">Lớp</label><input id="lop" placeholder="2A…"></div>
+</section>
+
+<div id="questions"></div>
+
+<section class="result hidden" id="result">
+  <svg id="resArt" viewBox="0 0 160 170" aria-hidden="true"></svg>
+  <div>
+    <div class="score" id="scoreTxt">0<small>/10</small></div>
+    <div class="stars" id="starTxt"></div>
+    <p id="msgTxt"></p>
+    <p id="detailTxt" style="font-size:16px;color:var(--muted)"></p>
+    <button class="big copy" id="copyBtn">📋 Chép kết quả gửi cô</button>
+  </div>
+</section>
+
+<div class="actions">
+  <button class="big go" id="submitBtn">✅ Nộp bài</button>
+  <button class="big fix hidden" id="fixBtn">✏️ Sửa câu sai</button>
+  <button class="big reset hidden" id="resetBtn">🔄 Làm lại</button>
+</div>
+
+<p class="foot">Em kiểm tra lại các phép tính trước khi nộp bài nhé! 💪</p>
+</div>
+
+<script>
+/* ================= CHIBI ART ================= */
+const SK='#FFDDC2';
+function kid(o){
+  const {x=0,y=0,s=1,hair='#3B2A20',shirt='#4FA3F7',style='boy',arms='down',mouth='smile',glasses=false,skirt=null}=o;
+  let hands;
+  if(arms==='up') hands=[[-30,22],[30,22]];
+  else if(arms==='hold') hands=[[-12,52],[12,52]];
+  else if(arms==='wave') hands=[[-24,60],[32,20]];
+  else if(arms==='right') hands=[[-24,60],[34,44]];
+  else hands=[[-24,60],[24,60]];
+  const armSvg=hands.map((h,i)=>{const sx=i?14:-14;return `<path d="M${sx} 46 Q${(sx+h[0])/2+(i?6:-6)} ${(46+h[1])/2} ${h[0]} ${h[1]}" stroke="${shirt}" stroke-width="10" stroke-linecap="round" fill="none"/><circle cx="${h[0]}" cy="${h[1]}" r="6" fill="${SK}"/>`}).join('');
+  let back='',front='';
+  if(style==='girl'){back=`<circle cx="-33" cy="4" r="12" fill="${hair}"/><circle cx="33" cy="4" r="12" fill="${hair}"/><circle cx="-28" cy="-10" r="4" fill="#FF7EB3"/><circle cx="28" cy="-10" r="4" fill="#FF7EB3"/>`;}
+  if(style==='mom'){back=`<path d="M-36 0 Q-40 34 -24 40 L24 40 Q40 34 36 0 Z" fill="${hair}"/><circle cx="0" cy="-40" r="13" fill="${hair}"/>`;}
+  const cap=`<path d="M-35 4 Q-39 -38 0 -38 Q39 -38 35 4 Q31 -12 20 -17 Q10 -6 -2 -15 Q-14 -5 -27 -13 Q-31 -6 -35 4Z" fill="${hair}"/>`;
+  const boyTuft=style==='boy'?`<path d="M-4 -37 Q2 -50 10 -40" stroke="${hair}" stroke-width="5" fill="none" stroke-linecap="round"/>`:'';
+  const m= mouth==='open'?`<path d="M-7 17 Q0 28 7 17 Z" fill="#8a3b2e"/><path d="M-4 21 Q0 25 4 21" fill="#FF8C8C"/>`
+         : mouth==='o'?`<ellipse cx="0" cy="20" rx="4" ry="5" fill="#8a3b2e"/>`
+         : `<path d="M-6 17 Q0 24 6 17" stroke="#8a3b2e" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;
+  const gl=glasses?`<g stroke="#5a4a6a" stroke-width="2" fill="none"><circle cx="-12" cy="6" r="9"/><circle cx="12" cy="6" r="9"/><path d="M-3 6 H3"/></g>`:'';
+  const body = skirt
+    ? `<path d="M-17 64 Q-19 42 0 39 Q19 42 17 64Z" fill="${shirt}"/><path d="M-22 70 L-14 58 L14 58 L22 70Z" fill="${skirt}"/>`
+    : `<path d="M-19 66 Q-21 41 0 38 Q21 41 19 66Z" fill="${shirt}"/>`;
+  return `<g transform="translate(${x} ${y}) scale(${s})">
+   <ellipse cx="0" cy="80" rx="24" ry="4" fill="#000" opacity=".08"/>
+   <rect x="-12" y="62" width="9" height="15" rx="4" fill="#3d4a6b"/><rect x="3" y="62" width="9" height="15" rx="4" fill="#3d4a6b"/>
+   <ellipse cx="-8" cy="78" rx="7" ry="4" fill="#E86A5C"/><ellipse cx="8" cy="78" rx="7" ry="4" fill="#E86A5C"/>
+   ${body}${armSvg}${back}
+   <circle cx="0" cy="0" r="34" fill="${SK}"/>
+   ${cap}${boyTuft}
+   <ellipse cx="-12" cy="6" rx="5" ry="6.5" fill="#2b1d16"/><circle cx="-10.3" cy="3.4" r="2.1" fill="#fff"/><circle cx="-13.5" cy="8.5" r="1" fill="#fff"/>
+   <ellipse cx="12" cy="6" rx="5" ry="6.5" fill="#2b1d16"/><circle cx="13.7" cy="3.4" r="2.1" fill="#fff"/><circle cx="10.5" cy="8.5" r="1" fill="#fff"/>
+   ${gl}
+   <ellipse cx="-21" cy="15" rx="5.5" ry="3.2" fill="#FF9AA8" opacity=".65"/><ellipse cx="21" cy="15" rx="5.5" ry="3.2" fill="#FF9AA8" opacity=".65"/>
+   ${m}
+  </g>`;
+}
+const marble=(x,y,c,r=6)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${c}"/><circle cx="${x-r*.35}" cy="${y-r*.35}" r="${r*.33}" fill="#fff" opacity=".75"/>`;
+const orange=(x,y,r=9)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#FF9F1C"/><circle cx="${x-r*.35}" cy="${y-r*.35}" r="${r*.25}" fill="#FFD08A"/><ellipse cx="${x+3}" cy="${y-r}" rx="4" ry="2" fill="#47B36B" transform="rotate(-25 ${x+3} ${y-r})"/>`;
+function star(cx,cy,r,c){let p='';for(let i=0;i<10;i++){const a=Math.PI/5*i-Math.PI/2,rr=i%2?r*.45:r;p+=(i?'L':'M')+(cx+rr*Math.cos(a)).toFixed(1)+' '+(cy+rr*Math.sin(a)).toFixed(1)}return `<path d="${p}Z" fill="${c}" stroke="#E0A800" stroke-width="1.2" stroke-linejoin="round"/>`}
+const book=(x,y,c,w=14,h=26)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="2" fill="${c}"/><rect x="${x+2}" y="${y+4}" width="${w-4}" height="2.5" fill="#fff" opacity=".6"/><rect x="${x+2}" y="${y+h-7}" width="${w-4}" height="2.5" fill="#fff" opacity=".6"/>`;
+const capHat=(x,y,c)=>`<path d="M${x-12} ${y} Q${x-12} ${y-15} ${x} ${y-15} Q${x+12} ${y-15} ${x+12} ${y}Z" fill="${c}"/><rect x="${x-2}" y="${y-2}" width="20" height="5" rx="2.5" fill="${c}"/><circle cx="${x}" cy="${y-15}" r="2.5" fill="#fff"/>`;
+const sparkle=(x,y,c='#FFC93C')=>`<path d="M${x} ${y-7} L${x+2} ${y-2} L${x+7} ${y} L${x+2} ${y+2} L${x} ${y+7} L${x-2} ${y+2} L${x-7} ${y} L${x-2} ${y-2}Z" fill="${c}"/>`;
+const bubble=(x,y,w,h,t,fs=16)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="12" fill="#fff" stroke="#E2D6F7" stroke-width="2"/><text x="${x+w/2}" y="${y+h/2+fs*.35}" text-anchor="middle" font-family="Baloo 2,sans-serif" font-weight="800" font-size="${fs}" fill="#8C6BF2">${t}</text>`;
+const label=(x,y,t,c='#2E2A4F')=>`<text x="${x}" y="${y}" text-anchor="middle" font-family="Baloo 2,sans-serif" font-weight="800" font-size="13" fill="${c}">${t}</text>`;
+
+const ART={
+hero:()=>`
+  <circle cx="110" cy="85" r="78" fill="#fff" opacity=".55"/>
+  ${kid({x:70,y:72,s:.95,style:'boy',shirt:'#4FA3F7',arms:'wave'})}
+  ${kid({x:150,y:72,s:.95,style:'girl',hair:'#5B3A29',shirt:'#FF7EB3',arms:'up',mouth:'open',skirt:'#FFC93C'})}
+  ${bubble(84,4,52,30,'15 − 7',15)}
+  ${sparkle(24,30)}${sparkle(198,40,'#8C6BF2')}${sparkle(196,128,'#FF7EB3')}`,
+q1:()=>`
+  <rect x="88" y="14" width="110" height="78" rx="10" fill="#2F6B4F" stroke="#B9814F" stroke-width="6"/>
+  <text x="143" y="44" text-anchor="middle" font-family="Baloo 2" font-weight="800" font-size="20" fill="#fff">12 − 5</text>
+  <text x="143" y="72" text-anchor="middle" font-family="Baloo 2" font-weight="700" font-size="16" fill="#FFE29A">= ?</text>
+  <path d="M110 92 v40 M176 92 v40" stroke="#B9814F" stroke-width="5"/>
+  ${kid({x:52,y:70,s:.9,style:'boy',shirt:'#8C6BF2',arms:'right'})}
+  <rect x="78" y="46" width="14" height="5" rx="2" fill="#fff" transform="rotate(-30 85 48)"/>`,
+q2:()=>{let m='';const cs=['#4FA3F7','#FF7EB3','#2FBF71','#FFC93C','#8C6BF2','#F25C54'];
+  for(let i=0;i<16;i++)m+=marble(16+(i%4)*12,128-Math.floor(i/4)*11,cs[i%6],5.5);
+  let n=`<circle cx="165" cy="116" r="18" fill="#fff" stroke="#FF7EB3" stroke-width="3" stroke-dasharray="5 4"/><text x="165" y="124" text-anchor="middle" font-family="Baloo 2" font-weight="800" font-size="22" fill="#FF7EB3">?</text>`;
+  return `${kid({x:50,y:46,s:.72,style:'boy',shirt:'#4FA3F7',arms:'hold'})}${kid({x:165,y:46,s:.72,style:'girl',hair:'#7A4B2A',shirt:'#FF7EB3',arms:'hold',skirt:'#8C6BF2'})}
+  ${m}${n}${label(50,155,'Bình')}${label(165,155,'An')}${bubble(88,50,46,26,'ít hơn',13)}`},
+q3:()=>`
+  <rect x="104" y="40" width="10" height="90" rx="4" fill="#B9814F"/><path d="M80 138 h60 l-8 -10 h-44z" fill="#B9814F"/>
+  <rect x="34" y="36" width="150" height="8" rx="4" fill="#8C6BF2" transform="rotate(-8 109 40)"/>
+  <circle cx="109" cy="38" r="8" fill="#FFC93C"/>
+  <path d="M44 52 l-16 32 h40z" fill="none" stroke="#6A4FD0" stroke-width="2"/><path d="M24 84 h48 a24 10 0 0 1 -48 0z" fill="#E6D9FF"/>
+  <path d="M174 34 l-16 32 h40z" fill="none" stroke="#6A4FD0" stroke-width="2"/><path d="M154 66 h48 a24 10 0 0 1 -48 0z" fill="#E6D9FF"/>
+  <text x="48" y="104" text-anchor="middle" font-family="Baloo 2" font-weight="800" font-size="15" fill="#2E2A4F">?</text>
+  <text x="178" y="86" text-anchor="middle" font-family="Baloo 2" font-weight="800" font-size="15" fill="#2E2A4F">?</text>
+  ${bubble(76,138,66,26,'&lt;  =  &gt;',15)}`,
+q4:()=>`${kid({x:62,y:60,s:.92,style:'mom',hair:'#3B2A20',shirt:'#47B36B',arms:'right',skirt:'#47B36B'})}
+  <path d="M110 92 h76 l-8 46 h-60z" fill="#D9A066"/><path d="M110 92 h76" stroke="#B9814F" stroke-width="5"/>
+  <path d="M116 104 h64 M118 116 h60 M120 128 h56" stroke="#B9814F" stroke-width="2" opacity=".6"/>
+  <path d="M122 92 Q148 52 174 92" stroke="#B9814F" stroke-width="5" fill="none"/>
+  ${orange(126,84)}${orange(144,82)}${orange(162,84)}${orange(135,72)}${orange(153,71)}${orange(96,50,10)}
+  ${bubble(140,10,60,26,'còn ?',14)}`,
+q5:()=>{let b='';const cs=['#F25C54','#4FA3F7','#FFC93C','#2FBF71','#8C6BF2','#FF7EB3','#FF9F1C'];
+  for(let i=0;i<6;i++)b+=book(104+i*15,20,cs[i]);for(let i=0;i<5;i++)b+=book(104+i*15,64,cs[(i+3)%7]);
+  return `<rect x="96" y="12" width="104" height="128" rx="6" fill="#E9C9A0"/><rect x="100" y="16" width="96" height="120" fill="#F7E3C6"/>
+  <path d="M100 48 h96 M100 92 h96" stroke="#B9814F" stroke-width="5"/>${b}
+  ${kid({x:52,y:70,s:.88,style:'girl',hair:'#3B2A20',shirt:'#FFC93C',arms:'hold',skirt:'#4FA3F7'})}
+  ${book(40,112,'#F25C54',22,18)}${label(150,158,'Thư viện','#6B4A2A')}`},
+q6:()=>`${kid({x:56,y:62,s:.82,style:'girl',hair:'#3B2A20',shirt:'#8C6BF2',arms:'up',skirt:'#FF7EB3'})}${kid({x:160,y:62,s:.82,style:'girl',hair:'#7A4B2A',shirt:'#2FBF71',arms:'up',skirt:'#FFC93C',mouth:'open'})}
+  ${star(30,42,10,'#FFE04D')}${star(82,42,10,'#FFE04D')}${star(134,42,10,'#FFE04D')}${star(186,42,10,'#FFE04D')}
+  ${star(108,20,12,'#FFE04D')}${star(108,110,9,'#FFE04D')}
+  ${label(56,150,'Hà')}${label(160,150,'Linh')}`,
+q7:()=>`${kid({x:70,y:66,s:.9,style:'boy',hair:'#2B1D16',shirt:'#F25C54',arms:'right',mouth:'o'})}
+  <circle cx="132" cy="40" r="22" fill="#DFF3FF" stroke="#5a4a6a" stroke-width="6"/><circle cx="125" cy="33" r="6" fill="#fff" opacity=".8"/>
+  <path d="M116 56 L102 84" stroke="#B9814F" stroke-width="8" stroke-linecap="round"/>
+  ${bubble(150,90,62,30,'lớn nhất?',13)}${sparkle(190,24,'#FF7EB3')}`,
+q8:()=>`${kid({x:68,y:66,s:.9,style:'girl',hair:'#5B3A29',shirt:'#4FA3F7',arms:'right',skirt:'#FF9F1C'})}
+  <path d="M108 30 h22 a7 7 0 1 1 14 0 h22 v22 a7 7 0 1 0 0 14 v22 h-58z" fill="#FFC93C" stroke="#E0A800" stroke-width="2"/>
+  <text x="137" y="72" text-anchor="middle" font-family="Baloo 2" font-weight="800" font-size="28" fill="#fff">?</text>
+  ${bubble(112,110,92,28,'16 − ? = 9',14)}`,
+q9:()=>`${kid({x:46,y:62,s:.84,style:'mom',hair:'#2B1D16',shirt:'#8C6BF2',arms:'right',glasses:true,skirt:'#8C6BF2'})}
+  ${capHat(84,60,'#F25C54')}${capHat(84,44,'#4FA3F7')}
+  ${kid({x:130,y:96,s:.5,style:'boy',shirt:'#2FBF71',mouth:'open'})}${kid({x:178,y:96,s:.5,style:'girl',hair:'#7A4B2A',shirt:'#FF7EB3',mouth:'o',skirt:'#FFC93C'})}
+  ${capHat(130,82,'#FFC93C')}
+  ${bubble(140,8,66,26,'chưa có?',13)}`,
+res:()=>`${kid({x:80,y:76,s:1,style:'girl',hair:'#3B2A20',shirt:'#FFC93C',arms:'up',mouth:'open',skirt:'#FF7EB3'})}
+  <path d="M60 2 h40 v14 a20 20 0 0 1 -40 0z" fill="#FFC93C" stroke="#E0A800" stroke-width="2"/><rect x="76" y="34" width="8" height="10" fill="#E0A800"/><rect x="68" y="42" width="24" height="6" rx="2" fill="#B9814F"/>
+  ${sparkle(20,40)}${sparkle(140,30,'#FF7EB3')}${sparkle(140,120,'#8C6BF2')}`
+};
+document.getElementById('heroArt').innerHTML=ART.hero();
+document.getElementById('resArt').innerHTML=ART.res();
+
+/* ================= ĐỀ BÀI ================= */
+const N=(id,w)=>`<input class="num" id="${id}" inputmode="numeric" autocomplete="off" maxlength="3"${w?` style="width:${w}px"`:''}>`;
+const UNITS=['viên bi','quả cam','quyển truyện','ngôi sao','bạn','chiếc mũ'];
+const unitSel=id=>`<select id="${id}"><option value="">đơn vị…</option>${UNITS.map(u=>`<option>${u}</option>`).join('')}</select>`;
+const opSel=(id,opt)=>`<select id="${id}" class="op${opt?' opt':''}"><option value="">${opt?'…':'?'}</option><option value="-">−</option><option value="+">+</option></select>`;
+
+const WP={
+ q2:{given:[16,7],answer:9,unit:'viên bi',kw:['bi'],sample:'Số viên bi An có là: / An có số viên bi là:',
+   sum:[['Bình có:',16,'viên bi'],['An ít hơn Bình:',7,'viên bi']],ask:'An có: … viên bi?',
+   plusMsg:'An có <b>ít hơn</b> Bình → An có số bi bé hơn → em làm phép <b>trừ</b>.'},
+ q4:{given:[17,8],answer:9,unit:'quả cam',kw:['cam','qua'],sample:'Trong giỏ còn lại số quả cam là:',
+   sum:[['Có:',17,'quả cam'],['Lấy ra:',8,'quả cam']],ask:'Còn lại: … quả cam?',
+   plusMsg:'Mẹ đã <b>lấy ra</b> → số cam trong giỏ ít đi → em làm phép <b>trừ</b>.'},
+ q5:{given:[18,5,6],answer:7,unit:'quyển truyện',kw:['truyen','quyen','sach'],sample:'Thư viện còn lại số quyển truyện là:',lines:2,
+   sum:[['Có:',18,'quyển truyện'],['Sáng cho mượn:',5,'quyển'],['Chiều cho mượn:',6,'quyển']],ask:'Còn lại: … quyển truyện?',
+   plusMsg:'Cho mượn đi → số truyện ít đi. Em phải trừ <b>cả</b> 5 quyển buổi sáng <b>và</b> 6 quyển buổi chiều.'},
+ q6:{given:[17,9],answer:8,unit:'ngôi sao',kw:['sao','ha'],sample:'Hà gấp được số ngôi sao giấy là:',
+   sum:[['Cả hai bạn:',17,'ngôi sao'],['Linh:',9,'ngôi sao']],ask:'Hà: … ngôi sao?',
+   plusMsg:'17 là số sao của <b>cả hai bạn</b>. Muốn tìm số sao của Hà, em lấy tổng <b>trừ</b> số sao của Linh.'},
+ q9:{given:[16,9],answer:7,unit:'bạn',kw:['ban','mu'],sample:'Số bạn chưa nhận được mũ là:',
+   sum:[['Có:',16,'bạn'],['Có:',9,'chiếc mũ']],ask:'Chưa có mũ: … bạn?',
+   plusMsg:'9 chiếc mũ phát cho 9 bạn. Số bạn chưa có mũ = 16 bạn <b>trừ</b> 9 bạn đã có mũ.'}
+};
+function wpHTML(id){const P=WP[id];
+  const sum=P.sum.map((r,i)=>`<div class="sumrow">${r[0]} ${N(id+'_s'+i)} ${r[2]}</div>`).join('')+`<div class="sumrow">${P.ask}</div>`;
+  let lines='';const L=P.lines||1;
+  for(let i=0;i<L;i++){
+    lines+=`<div class="solrow">${N(id+'_a'+i)} ${opSel(id+'_o'+i)} ${N(id+'_b'+i)} ${opSel(id+'_p'+i,true)} ${N(id+'_c'+i)} = ${N(id+'_r'+i)} ( ${unitSel(id+'_u'+i)} )</div>`;
+    if(L>1&&i===0) lines+=`<p class="hintline">Nếu em giải bằng 2 phép tính thì viết thêm câu và phép tính thứ hai ở dưới; nếu làm 1 phép tính thì bỏ trống dòng dưới.</p><input class="txt" id="${id}_t1" placeholder="(Câu lời giải thứ hai – nếu có)">`;
+  }
+  return `<div class="solve">
+    <div class="box"><h4>Tóm tắt</h4>${sum}</div>
+    <div class="box"><h4>Bài giải</h4>
+      <input class="txt" id="${id}_t0" placeholder="Câu lời giải… (VD: ${P.sample.split(' / ')[0]})">
+      ${lines}
+      <div class="solrow">Đáp số: ${N(id+'_d')} ${unitSel(id+'_du')}</div>
+      <p class="hintline">Ô dấu thứ hai (…) chỉ dùng khi phép tính có 3 số.</p>
+    </div></div>`;
+}
+
+const STEPS=`<div class="steps"><b>Các bước làm:</b><ol><li>Đọc kĩ đề, tìm các số đã cho</li><li>Điền <b>tóm tắt</b></li><li>Viết <b>câu lời giải</b></li><li>Viết <b>phép tính</b> và đơn vị</li><li>Viết <b>đáp số</b></li></ol></div>`;
+const Q=[
+ {id:'q1',pts:1,text:'Tính:',art:'q1',
+  html:`<div class="calc"><span class="it"><span class="lb">a)</span>12 − 5 = ${N('q1a')}</span><span class="it"><span class="lb">b)</span>16 − 8 = ${N('q1b')}</span><span class="it"><span class="lb">c)</span>15 − 6 = ${N('q1c')}</span></div>`,
+  hint:'Mẹo <b>tách để trừ qua 10</b>: 12 − 5 → tách 5 = 2 + 3. Lấy 12 − 2 = 10, rồi 10 − 3 = 7.'},
+ {id:'q2',pts:1.5,text:'Bình có 16 viên bi, An có ít hơn Bình 7 viên bi. Hỏi An có bao nhiêu viên bi?',art:'q2',html:STEPS,after:wpHTML('q2'),
+  hint:'“Ít hơn” nghĩa là An có số bi <b>bé hơn</b> Bình → em làm phép <b>trừ</b>.'},
+ {id:'q3',pts:1,text:'Điền dấu &lt;, =, &gt; thích hợp vào chỗ chấm:',art:'q3',
+  html:`<div class="cmp"><div class="row"><span class="lb" style="color:var(--purple)">a)</span> 18 − 8 − 5 <span class="signs" data-id="q3a"></span> 18 − 9</div>
+        <div class="row"><span class="lb" style="color:var(--purple)">b)</span> 15 − 7 <span class="signs" data-id="q3b"></span> 6 + 3</div></div>`,
+  hint:'Tính kết quả <b>từng vế</b> trước (vế trái, vế phải), rồi mới so sánh hai số.'},
+ {id:'q4',pts:1,text:'Trong giỏ có 17 quả cam, mẹ đã lấy ra 8 quả. Hỏi trong giỏ còn lại bao nhiêu quả cam?',art:'q4',html:STEPS,after:wpHTML('q4'),
+  hint:'Lấy ra thì số cam trong giỏ <b>ít đi</b> → phép <b>trừ</b>.'},
+ {id:'q5',pts:1.5,text:'Thư viện có 18 quyển truyện. Buổi sáng cho mượn 5 quyển, buổi chiều cho mượn tiếp 6 quyển. Hỏi thư viện còn lại bao nhiêu quyển truyện?',art:'q5',html:STEPS,after:wpHTML('q5'),
+  hint:'Có <b>2 lần</b> cho mượn. Em có thể trừ liền: 18 − 5 − 6, hoặc tính 2 bước (trừ buổi sáng trước, rồi trừ buổi chiều).'},
+ {id:'q6',pts:1,text:'Hai bạn Hà và Linh gấp được tất cả 17 ngôi sao giấy. Linh gấp được 9 ngôi sao. Hỏi Hà gấp được bao nhiêu ngôi sao giấy?',art:'q6',html:STEPS,after:wpHTML('q6'),
+  hint:'“Tất cả” là số sao của <b>cả hai bạn</b>. Bớt phần của Linh đi thì còn lại phần của Hà.'},
+ {id:'q7',pts:.5,text:'Phép tính nào có kết quả lớn nhất? Chọn chữ cái trước đáp án đúng.',art:'q7',
+  html:`<div class="choices">${[['A','16 − 9'],['B','13 − 5'],['C','17 − 8'],['D','15 − 8']].map(c=>`<button class="choice" data-v="${c[0]}"><b>${c[0]}</b>${c[1]}</button>`).join('')}</div>`,
+  hint:'Tính kết quả cả 4 phép tính rồi so sánh nhé.'},
+ {id:'q8',pts:1,text:'Viết số thích hợp vào chỗ chấm:',art:'q8',
+  html:`<div class="calc"><span class="it"><span class="lb">a)</span>16 − ${N('q8a')} = 9</span><span class="it"><span class="lb">b)</span>${N('q8b')} − 6 = 8</span></div>
+        <div class="calc"><span class="it"><span class="lb">c)</span>15 − ${N('q8c')} = 7</span><span class="it"><span class="lb">d)</span>18 − ${N('q8d')} = 9</span></div>`,
+  hint:'Tìm số trừ: lấy số bị trừ <b>trừ</b> hiệu (16 − 9). Tìm số bị trừ: lấy hiệu <b>cộng</b> số trừ (8 + 6).'},
+ {id:'q9',pts:1.5,text:'Trong một nhóm có 16 bạn, cô giáo chuẩn bị 9 chiếc mũ. Mỗi bạn nhận nhiều nhất một chiếc mũ. Hỏi có bao nhiêu bạn chưa nhận được mũ?',art:'q9',html:STEPS,after:wpHTML('q9'),
+  hint:'9 chiếc mũ → có 9 bạn nhận được mũ. Số bạn chưa có mũ = tất cả các bạn − số bạn đã có mũ.'}
+];
+const box=document.getElementById('questions');
+Q.forEach((q,i)=>{
+  const c=document.createElement('section');c.className='card';c.id='card_'+q.id;
+  c.innerHTML=`<span class="badge" id="badge_${q.id}"></span>
+   <div class="qhead"><span class="qnum">Câu ${i+1}</span><div class="qtext">${q.text}</div></div>
+   <div class="qbody"><div class="qmain">${q.html}</div>
+     <div class="art"><svg viewBox="0 0 220 165" aria-hidden="true">${ART[q.art]()}</svg></div></div>
+     ${q.after||''}
+     <div class="tools"><button class="hbtn" data-h="${q.id}">💡 Gợi ý</button></div>
+     <div class="hint" id="hint_${q.id}">${q.hint}</div>
+     <div class="fb" id="fb_${q.id}"></div>`;
+  box.appendChild(c);
+});
+document.querySelectorAll('.signs').forEach(s=>{s.innerHTML=['<','=','>'].map(v=>`<button class="sign" data-v="${v}">${v.replace('<','&lt;').replace('>','&gt;')}</button>`).join('');});
+document.querySelectorAll('.sign').forEach(b=>b.onclick=()=>{if(locked(b))return;b.parentNode.querySelectorAll('.sign').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');tick()});
+document.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{if(locked(b))return;b.parentNode.querySelectorAll('.choice').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');tick()});
+document.querySelectorAll('.hbtn').forEach(b=>b.onclick=()=>{document.getElementById('hint_'+b.dataset.h).classList.toggle('show');tick()});
+document.querySelectorAll('.num').forEach(i=>i.addEventListener('input',()=>{i.value=i.value.replace(/[^0-9]/g,'')}));
+function locked(el){return el.closest('.card').dataset.lock==='1'}
+
+/* ================= CHẤM ================= */
+const $=id=>document.getElementById(id);
+const v=id=>($(id)?$(id).value.trim():'');
+const n=id=>{const s=v(id);return s===''?null:parseInt(s,10)};
+const norm=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d').replace(/Đ/g,'d').toLowerCase();
+function mark(el,ok){if(!el)return;el.classList.remove('ok','bad');el.classList.add(ok?'ok':'bad')}
+const tachText={'12-5':'12 − 2 = 10; 10 − 3 = 7','16-8':'16 − 6 = 10; 10 − 2 = 8','15-6':'15 − 5 = 10; 10 − 1 = 9'};
+
+function gradeSimple(q){ // q1, q8
+  let ok=0,tot=0,notes=[];
+  if(q==='q1'){
+    [['q1a',12,5,7],['q1b',16,8,8],['q1c',15,6,9]].forEach(([id,a,b,r])=>{tot++;const g=n(id)===r;mark($(id),g);if(g)ok++;
+      else notes.push(`${a} − ${b} = <b>${r}</b>. Cách tách: ${tachText[a+'-'+b]}.`)});
+  }else{
+    [['q8a',7,'16 − <b>7</b> = 9 (vì 16 − 9 = 7)'],['q8b',14,'<b>14</b> − 6 = 8 (vì 8 + 6 = 14)'],['q8c',8,'15 − <b>8</b> = 7 (vì 15 − 7 = 8)'],['q8d',9,'18 − <b>9</b> = 9 (vì 18 − 9 = 9)']]
+    .forEach(([id,r,t])=>{tot++;const g=n(id)===r;mark($(id),g);if(g)ok++;else notes.push(t)});
+  }
+  return {ok,tot,notes};
+}
+function gradeQ3(){
+  let ok=0,notes=[];
+  [['q3a','<','18 − 8 − 5 = 5 và 18 − 9 = 9. Vì 5 &lt; 9 nên điền dấu <b>&lt;</b>.'],['q3b','<','15 − 7 = 8 và 6 + 3 = 9. Vì 8 &lt; 9 nên điền dấu <b>&lt;</b>.']].forEach(([id,r,t])=>{
+    const wrap=document.querySelector(`.signs[data-id="${id}"]`);const sel=wrap.querySelector('.sel');
+    wrap.querySelectorAll('.sign').forEach(b=>b.classList.remove('ok','bad'));
+    if(sel&&sel.dataset.v===r){sel.classList.add('ok');ok++}else{if(sel)sel.classList.add('bad');notes.push(t)}
+  });
+  return {ok,tot:2,notes};
+}
+function gradeQ7(){
+  const sel=document.querySelector('#card_q7 .choice.sel');document.querySelectorAll('#card_q7 .choice').forEach(b=>b.classList.remove('ok','bad'));
+  if(sel&&sel.dataset.v==='C'){sel.classList.add('ok');return{ok:1,tot:1,notes:[]}}
+  if(sel)sel.classList.add('bad');
+  return{ok:0,tot:1,notes:['16 − 9 = 7; 13 − 5 = 8; <b>17 − 8 = 9</b>; 15 − 8 = 7. Số 9 lớn nhất → chọn <b>C</b>.']};
+}
+function evalLine(id,i){
+  const a=n(id+'_a'+i),o=v(id+'_o'+i),b=n(id+'_b'+i),p=v(id+'_p'+i),c=n(id+'_c'+i),r=n(id+'_r'+i);
+  const empty=a===null&&b===null&&r===null&&c===null&&!o;
+  if(empty)return{empty:true};
+  if(a===null||b===null||r===null||!o)return{bad:true,a,b,c,r,o,p};
+  let val=o==='-'?a-b:a+b;let nums=[a,b];
+  if(p||c!==null){if(!p||c===null)return{bad:true,a,b,c,r,o,p};val=p==='-'?val-c:val+c;nums.push(c)}
+  return{a,b,c,r,o,p,nums,val,arith:val===r,usesPlus:o==='+'||p==='+'};
+}
+function gradeWP(id){
+  const P=WP[id];let ok=0,tot=0,notes=[];
+  // tóm tắt
+  P.sum.forEach((r,i)=>{tot+=.5;const g=n(id+'_s'+i)===r[1];mark($(id+'_s'+i),g);if(g)ok+=.5});
+  if(P.sum.some((r,i)=>n(id+'_s'+i)!==r[1]))notes.push('Tóm tắt: '+P.sum.map(r=>`${r[0]} <b>${r[1]}</b> ${r[2]}`).join('; ')+'; '+P.ask);
+  // lời giải
+  tot++;const t0=v(id+'_t0');const tn=norm(t0);
+  const lgOk=t0.split(/\s+/).length>=3&&P.kw.some(k=>tn.includes(k));
+  mark($(id+'_t0'),lgOk);if(lgOk)ok++;else notes.push(`Câu lời giải cần nói rõ em đang tìm gì. Ví dụ: <i>${P.sample}</i>`);
+  // phép tính
+  tot+=2;const L=P.lines||1;const lines=[];for(let i=0;i<L;i++)lines.push(evalLine(id,i));
+  const filled=lines.filter(l=>!l.empty);
+  let calcOk=false,why='';
+  if(!filled.length){why='Em chưa viết phép tính.'}
+  else if(filled.some(l=>l.bad)){why='Phép tính còn thiếu số hoặc thiếu dấu.'}
+  else{
+    const avail=[...P.given];let pool=[...P.given];let good=true;
+    filled.forEach((l,k)=>{l.nums.forEach(x=>{const ix=pool.indexOf(x);if(ix>=0)pool.splice(ix,1);else{const prev=filled.slice(0,k).map(f=>f.r);if(!prev.includes(x))good=false}});pool.push(l.r)});
+    const usedAll=P.given.every(g=>filled.some(l=>l.nums.includes(g))||filled.some(l=>l.r===g&&false));
+    const last=filled[filled.length-1];
+    if(filled.some(l=>!l.arith)){why='Kết quả phép tính chưa đúng – em tính lại nhé.'}
+    else if(last.r!==P.answer){why=filled.some(l=>l.usesPlus)?P.plusMsg:(id==='q5'?'Em mới trừ một lần cho mượn. '+P.plusMsg:'Em chọn chưa đúng số để tính.')}
+    else if(!good||!usedAll){why='Phép tính cần dùng đúng các số trong đề bài.'}
+    else calcOk=true;
+  }
+  // unit of last filled line
+  const lastIdx=filled.length?lines.indexOf(filled[filled.length-1]):0;
+  filled.forEach((l,k)=>{const i=lines.indexOf(l);['_a','_b','_r'].forEach(s=>mark($(id+s+i),calcOk));mark($(id+'_o'+i),calcOk);if(l.p||l.c!==null){mark($(id+'_p'+i),calcOk);mark($(id+'_c'+i),calcOk)}});
+  if(!filled.length){['_a','_b','_r'].forEach(s=>mark($(id+s+'0'),false));mark($(id+'_o0'),false)}
+  if(calcOk)ok+=2;else notes.push('Phép tính: '+why+' Đúng là: <b>'+(id==='q5'?'18 − 5 − 6 = 7 (quyển truyện)':`${P.given[0]} − ${P.given[1]} = ${P.answer} (${P.unit})`)+'</b>.');
+  // đơn vị
+  tot+=.5;const uId=id+'_u'+lastIdx;const uOk=v(uId)===P.unit;mark($(uId),uOk);if(uOk)ok+=.5;else notes.push(`Đơn vị đúng là <b>(${P.unit})</b>.`);
+  if(id==='q5'&&filled.length>1){const u0=id+'_u0';const g=v(u0)===P.unit;mark($(u0),g)}
+  // đáp số
+  tot+=1;const dOk=n(id+'_d')===P.answer&&v(id+'_du')===P.unit;mark($(id+'_d'),n(id+'_d')===P.answer);mark($(id+'_du'),v(id+'_du')===P.unit);
+  if(dOk)ok+=1;else notes.push(`Đáp số: <b>${P.answer} ${P.unit}</b>.`);
+  return{ok,tot,notes};
+}
+const praise=['Giỏi quá!','Chính xác!','Tuyệt vời!','Xuất sắc!','Em làm rất chắc!'];
+let attempt=0,firstScore=null;
+function grade(){
+  let total=0,detail=[];
+  Q.forEach((q,i)=>{
+    const card=$('card_'+q.id);
+    let r;
+    if(q.id==='q1'||q.id==='q8')r=gradeSimple(q.id);
+    else if(q.id==='q3')r=gradeQ3();
+    else if(q.id==='q7')r=gradeQ7();
+    else r=gradeWP(q.id);
+    const pts=Math.round(q.pts*r.ok/r.tot*4)/4;total+=pts;
+    card.classList.remove('ok','part','bad');
+    const cls=r.ok>=r.tot?'ok':(r.ok>0?'part':'bad');card.classList.add(cls);
+    $('badge_'+q.id).textContent=(cls==='ok'?'⭐ ':'')+fmt(pts)+' / '+fmt(q.pts)+' điểm';
+    const fb=$('fb_'+q.id);
+    fb.innerHTML=cls==='ok'?`<span class="g">✔ ${praise[i%praise.length]}</span>`:`<span class="r">Mình xem lại nhé:</span><ul>${r.notes.map(x=>`<li>${x}</li>`).join('')}</ul>`;
+    fb.classList.add('show');
+    card.dataset.lock='1';card.dataset.state=cls;
+    detail.push(`Câu ${i+1}: ${fmt(pts)}/${fmt(q.pts)}`);
+  });
+  total=Math.round(total*4)/4;
+  return{total,detail};
+}
+function fmt(x){return (Math.round(x*100)/100).toString().replace('.',',')}
+function lockAll(on){document.querySelectorAll('.card').forEach(c=>{const st=c.dataset.state;const lk=on||(st==='ok');c.dataset.lock=lk?'1':'0';
+  c.querySelectorAll('input,select').forEach(e=>e.disabled=lk)})}
+
+$('submitBtn').onclick=()=>{
+  if(!v('hoten')){toast('Em nhớ gõ họ và tên trước khi nộp nhé!');$('hoten').focus();return}
+  attempt++;const {total,detail}=grade();if(firstScore===null)firstScore=total;
+  lockAll(true);
+  const res=$('result');res.classList.remove('hidden');
+  $('scoreTxt').innerHTML=fmt(total)+'<small>/10</small>';
+  const st=total>=9?5:total>=7.5?4:total>=6?3:total>=4?2:1;$('starTxt').textContent='⭐'.repeat(st)+'☆'.repeat(5-st);
+  $('msgTxt').textContent= total>=10?`Hoàn hảo, ${v('hoten')}! Em đã thuộc bảng trừ qua 10 rồi! 🎉`
+     : total>=8?`Giỏi lắm ${v('hoten')}! Em xem lại vài chỗ màu đỏ rồi bấm “Sửa câu sai” nhé.`
+     : total>=5?`Em đã cố gắng! Đọc gợi ý ở các câu màu vàng/đỏ rồi sửa lại nhé.`
+     : `Không sao đâu! Em mở “💡 Gợi ý”, đọc kĩ đề rồi sửa lại từng câu nhé.`;
+  $('detailTxt').textContent=`Lần nộp ${attempt}`+(attempt>1?` · Điểm lần 1: ${fmt(firstScore)}`:'')+' · '+detail.join(' · ');
+  $('submitBtn').classList.add('hidden');$('resetBtn').classList.remove('hidden');
+  $('fixBtn').classList.toggle('hidden',total>=10);
+  res.scrollIntoView({behavior:'smooth',block:'center'});
+  if(total>=8){fireworks(total>=10?260:150);fanfare()}else if(total>=5){fireworks(60);chime()}else soft();
+  window._last={total,detail};
+};
+$('fixBtn').onclick=()=>{
+  lockAll(false);
+  document.querySelectorAll('.card').forEach(c=>{if(c.dataset.state!=='ok'){c.querySelectorAll('.ok,.bad').forEach(e=>e.classList.remove('ok','bad'))}});
+  $('fixBtn').classList.add('hidden');$('submitBtn').classList.remove('hidden');$('submitBtn').textContent='✅ Nộp lại';
+  const first=document.querySelector('.card.bad,.card.part');if(first)first.scrollIntoView({behavior:'smooth',block:'start'});
+};
+$('resetBtn').onclick=()=>{if(confirm('Xoá hết bài làm để làm lại từ đầu?'))location.reload()};
+$('copyBtn').onclick=()=>{
+  const L=window._last;if(!L)return;
+  const t=`📘 TOÁN LỚP 2 – TUẦN 7 – Phiếu số 2: Bảng trừ (qua 10)\n👦 Họ tên: ${v('hoten')}  – Lớp: ${v('lop')||'…'}\n⭐ Điểm: ${fmt(L.total)}/10 (lần nộp ${attempt}${attempt>1?`, lần 1: ${fmt(firstScore)}`:''})\n${L.detail.join('\n')}\n🕒 ${new Date().toLocaleString('vi-VN')}`;
+  (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast('Đã chép! Em dán vào Zalo gửi cô nhé.')).catch(()=>{prompt('Em chép đoạn này gửi cô:',t)});
+};
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)}
+function tick(){beep(880,.05,.04)}
+
+/* ================= ÂM THANH ================= */
+let AC=null;function ac(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)()}catch(e){}return AC}
+function beep(f,d,vol=.12,t0=0,type='triangle'){const a=ac();if(!a)return;const o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(vol,a.currentTime+t0);g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+t0+d);o.connect(g);g.connect(a.destination);o.start(a.currentTime+t0);o.stop(a.currentTime+t0+d+.02)}
+function fanfare(){[523,659,784,1047,784,1047].forEach((f,i)=>beep(f,.25,.14,i*.13))}
+function chime(){[659,784,988].forEach((f,i)=>beep(f,.25,.12,i*.12))}
+function soft(){[523,494,523].forEach((f,i)=>beep(f,.2,.08,i*.15,'sine'))}
+
+/* ================= PHÁO HOA ================= */
+const cv=$('fx'),cx=cv.getContext('2d');let parts=[],raf=null;
+function size(){cv.width=innerWidth;cv.height=innerHeight}size();addEventListener('resize',size);
+function fireworks(n){const cols=['#FF7EB3','#4FA3F7','#FFC93C','#2FBF71','#8C6BF2','#FF9F1C'];
+  for(let b=0;b<5;b++){const x=cv.width*(.15+.7*Math.random()),y=cv.height*(.15+.35*Math.random());
+    setTimeout(()=>{for(let i=0;i<n/5;i++){const a=Math.random()*Math.PI*2,s=2+Math.random()*5;parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:70+Math.random()*30,c:cols[i%6],r:2+Math.random()*3})}if(!raf)loop()},b*350)}}
+function loop(){cx.clearRect(0,0,cv.width,cv.height);parts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.08;p.vx*=.985;p.life--;cx.globalAlpha=Math.max(p.life/90,0);cx.fillStyle=p.c;cx.beginPath();cx.arc(p.x,p.y,p.r,0,7);cx.fill()});
+  parts=parts.filter(p=>p.life>0);if(parts.length)raf=requestAnimationFrame(loop);else{raf=null;cx.clearRect(0,0,cv.width,cv.height)}}
+</script>
+</body>
+</html>
